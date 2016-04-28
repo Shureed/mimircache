@@ -2,12 +2,16 @@ import matplotlib.pyplot as plt
 
 
 class KeyTrace:
-    def __init__(self, reader, num_keys):
+    def __init__(self, reader, num_keys, min_frequency=0):
+        if min_frequency < 0:
+            raise Exception("Invalid min_frequency: value must be positive")
+
         self.reader = reader
         self.num_keys = num_keys
+        self.min_frequency = min_frequency
 
-    def show(self, num_colors=4, min_frequency=0):
-        x, y = self.generate_plot_data(min_frequency=min_frequency)
+    def show(self, num_colors=4):
+        x, y = self.generate_plot_data()
 
         colors = []
         color = 0
@@ -26,16 +30,14 @@ class KeyTrace:
         plt.ylabel("Key")
         plt.show()
 
-    def generate_plot_data(self, min_frequency=0):
-        if min_frequency < 0:
-            raise Exception("Invalid min_frequency: value must be positive")
+    def generate_plot_data(self):
 
         logical_time = 0
         d = {}
 
         values = None
 
-        if min_frequency > 0:
+        if self.min_frequency > 0:
             for element in self.reader:
                 if element in d:
                     d[element].append(logical_time)
